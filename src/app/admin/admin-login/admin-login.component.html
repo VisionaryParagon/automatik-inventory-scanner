@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8">
+      <h2>Admin Login</h2>
+
+      <form #adminForm="ngForm" novalidate>
+        <mat-form-field class="w-100">
+          <input matInput type="text" placeholder="Username" autocomplete="off" required [(ngModel)]="admin.username" name="username" #username="ngModel" (ngModelChange)="hideError()">
+        </mat-form-field>
+        <div class="errorMsg" [@topDown]="true" *ngIf="username.invalid && (username.touched || submitted)">
+          <p *ngIf="username.errors.required">Username is required</p>
+        </div>
+
+        <mat-form-field class="w-100">
+          <input matInput type="password" placeholder="Password" autocomplete="off" required [(ngModel)]="admin.password" name="password" #password="ngModel" (ngModelChange)="hideError()">
+        </mat-form-field>
+        <div class="errorMsg" [@topDown]="true" *ngIf="password.invalid && (password.touched || submitted)">
+          <p *ngIf="password.errors.required">Password is required</p>
+        </div>
+
+        <div class="errorMsg">
+          <p [@topDown]="true" *ngIf="invalid">{{ err }}</p>
+
+          <p [@topDown]="true" *ngIf="error">Something went wrong... Please make sure you have a WiFi or mobile data connection and try refreshing your&nbsp;browser.</p>
+        </div>
+
+        <div class="text-center">
+          <p class="disclaimer">* Required field</p>
+
+          <button class="autoBtn" (click)="login(admin, adminForm.valid)">Submit</button>
+          <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

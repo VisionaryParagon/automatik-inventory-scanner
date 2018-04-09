@@ -1,0 +1,9 @@
+<div class="container" [@fade]="true">
+  <div *ngIf="!error">
+    <p>Admin works!</p>
+  </div>
+
+  <div [@topDown]="true" *ngIf="error">
+    <p class="text-danger">Something went wrong... Please make sure you have a WiFi or mobile data connection and try refreshing your&nbsp;browser.</p>
+  </div>
+</div>

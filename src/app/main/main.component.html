@@ -1,0 +1,58 @@
+<div class="container" [@fade]="true">
+  <div class="selectionBox" *ngIf="!selectedUser">
+    <h1>Welcome!</h1>
+
+    <mat-form-field class="w-100">
+      <mat-select placeholder="Who are you?" [(value)]="selectedContact" (selectionChange)="checkItems(selectedContact)">
+        <mat-option [value]="anyVal" disabled>Who are you?</mat-option>
+        <mat-option *ngFor="let contact of contacts" [value]="contact">{{ contact.first_name }} {{ contact.last_name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="userInfo text-center" [@fade]="true" *ngIf="selectedContact">
+    <h2>Hello, {{ selectedContact.first_name }}!</h2>
+
+    <img [src]="selectedContact.image" alt="{{ selectedContact.first_name }} {{ selectedContact.last_name }}">
+
+    <div class="row" *ngIf="!selectedUser">
+      <div class="col-6">
+        <button class="btn btn-warning btn-lg btn-block" (click)="setCheckOut()">Check-Out</button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-warning btn-lg btn-block" (click)="setCheckIn()">Check-In</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scannerBox" *ngIf="selectedUser">
+    <div *ngIf="availableDevices">
+      <select (change)="onDeviceSelectChange($event.target.value)">
+        <option value="" [selected]="!selectedDevice">No Device</option>
+        <option *ngFor="let device of availableDevices" [value]="device.deviceId" [selected]="selectedDevice && device.deviceId === selectedDevice.deviceId">{{ device.label }}</option>
+      </select>
+    </div>
+
+    <div [hidden]="!hasCameras">
+      <zxing-scanner #scanner class="test-class" start="true" [device]="selectedDevice" (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
+
+      <h2 *ngIf="!this.selectedDevice">No camera selected.</h2>
+
+      <p>Result: <strong>{{ qrResultString }}</strong></p>
+    </div>
+
+    <div *ngIf="!hasCameras && hasPermission === true">
+      <h2>Looks like your actual device does not has cameras, or I could no find'em.</h2>
+    </div>
+
+    <div *ngIf="hasPermission === undefined">
+      <h1>Waiting for permissions.</h1>
+
+      <h2>If your device does not has cameras, no permissions will be asked.</h2>
+    </div>
+
+    <div *ngIf="hasPermission === false">
+      <h2>You denied the camera permissions, we can't scan anything without it. 😪</h2>
+    </div>
+  </div>
+</div>

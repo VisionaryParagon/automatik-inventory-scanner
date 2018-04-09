@@ -1,0 +1,30 @@
+<header>
+  <nav>
+    <button id="logoBtn" routerLink="/" (touchstart)="outsideNav(); closeSubNav()"><img src="./assets/images/automatik-horiz-logo.png" height="100%" alt="automätik Logo"></button>
+
+    <button id="navBtn" [class.open]="state === 'active'" (click)="toggleNav()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <div id="navMenu" [@navMenu]="state">
+    <div *ngIf="!isAdmin">
+      <a routerLink="/" (click)="closeNav(); closeSubNav()">Start Over</a>
+      <a routerLink="/admin" (click)="closeNav(); closeSubNav()">Admin</a>
+    </div>
+    <div *ngIf="isAdmin">
+      <a routerLink="/admin" (click)="closeNav(); closeSubNav()">Admin Home</a>
+      <a (click)="closeNav(); closeSubNav(); logoutAdmin()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<section (touchstart)="outsideNav()">
+  <router-outlet></router-outlet>
+</section>
+
+<footer>
+  <div class="text-center">&copy; autom&auml;tik</div>
+</footer>

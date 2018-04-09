@@ -1,0 +1,47 @@
+@font-face {
+  font-family: 'Helvetica Neue LT Std';
+  src: url('./assets/fonts/HelveticaNeueLTStd-Th.eot');
+  src: url('./assets/fonts/HelveticaNeueLTStd-Th.eot?#iefix') format('embedded-opentype'), url('./assets/fonts/HelveticaNeueLTStd-Th.woff') format('woff'), url('./assets/fonts/HelveticaNeueLTStd-Th.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue LT Std';
+  src: url('./assets/fonts/HelveticaNeueLTStd-ThIt.eot');
+  src: url('./assets/fonts/HelveticaNeueLTStd-ThIt.eot?#iefix') format('embedded-opentype'), url('./assets/fonts/HelveticaNeueLTStd-ThIt.woff') format('woff'), url('./assets/fonts/HelveticaNeueLTStd-ThIt.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue LT Std';
+  src: url('./assets/fonts/HelveticaNeueLTStd-Roman.eot');
+  src: url('./assets/fonts/HelveticaNeueLTStd-Roman.eot?#iefix') format('embedded-opentype'), url('./assets/fonts/HelveticaNeueLTStd-Roman.woff') format('woff'), url('./assets/fonts/HelveticaNeueLTStd-Roman.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue LT Std';
+  src: url('./assets/fonts/HelveticaNeueLTStd-It.eot');
+  src: url('./assets/fonts/HelveticaNeueLTStd-It.eot?#iefix') format('embedded-opentype'), url('./assets/fonts/HelveticaNeueLTStd-It.woff') format('woff'), url('./assets/fonts/HelveticaNeueLTStd-It.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue LT Std';
+  src: url('./assets/fonts/HelveticaNeueLTStd-Bd.eot');
+  src: url('./assets/fonts/HelveticaNeueLTStd-Bd.eot?#iefix') format('embedded-opentype'), url('./assets/fonts/HelveticaNeueLTStd-Bd.woff') format('woff'), url('./assets/fonts/HelveticaNeueLTStd-Bd.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue LT Std';
+  src: url('./assets/fonts/HelveticaNeueLTStd-BdIt.eot');
+  src: url('./assets/fonts/HelveticaNeueLTStd-BdIt.eot?#iefix') format('embedded-opentype'), url('./assets/fonts/HelveticaNeueLTStd-BdIt.woff') format('woff'), url('./assets/fonts/HelveticaNeueLTStd-BdIt.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
