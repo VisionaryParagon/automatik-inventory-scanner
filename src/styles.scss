@@ -63,8 +63,9 @@ h4 {
   font-family: var(--client-font);
   font-size: 20px;
   font-weight: 400;
-  margin: 0 0 15px;
+  margin: 20px 0 15px;
   padding: 0;
+  text-align: left;
 }
 
 h4.modal-title {
@@ -127,12 +128,18 @@ a:not([href]):not([tabindex]):hover {
   font-size: 16px;
 }
 
-mat-form-field.mat-focused .mat-form-field-label {
-  color: #ffc11a;
+mat-form-field.mat-focused .mat-form-field-label,
+mat-form-field.mat-focused .mat-select-arrow {
+  color: #ffc11a !important;
 }
 
 span.mat-form-field-ripple {
   background-color: #ffc11a;
+}
+
+div.mat-select-panel {
+  max-height: 50vh;
+  max-height: calc(100vh * 0.5);
 }
 
 .errorMsg {
@@ -185,9 +192,10 @@ span.mat-form-field-ripple {
   width: 250px;
 }
 
+.btn.disabled, .btn:disabled
 .autoBtn[disabled] {
   cursor: not-allowed;
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
 .autoBtn:hover {
@@ -480,41 +488,110 @@ nav {
 section {
   min-height: 90vh;
   min-height: calc(100vh - 70px);
-  padding: 50px 0 0;
+  padding: 50px 0 65px;
   z-index: 0;
 }
 
 .container {
   max-width: 768px;
+  min-height: 80vh;
+  min-height: calc(100vh - 115px);
   padding: 15px 15px 30px;
 }
 
 .userInfo {
-  -moz-transition: all 0.25s;
-  -o-transition: all 0.25s;
-  -webkit-transition: all 0.25s;
-  transition: all 0.25s;
+  position: relative;
+}
+
+.userInfo .loader {
+  padding: 100px 0;
+  position: absolute;
+  width: 100%;
+}
+
+.userInfo .info {
+  padding: 1px 0;
+  position: relative;
 }
 
 .userInfo img {
   border-radius: 50%;
   height: auto;
   margin: 0 0 30px;
+  -moz-transition: all 0.25s;
+  -ms-transition: all 0.25s;
+  -o-transition: all 0.25s;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+  width: 200px;
+}
+
+.userInfo img.active {
+  left: 0;
+  position: absolute;
+  top: 0;
+  -moz-transform: scale(0.5) translate(-50%, -50%);
+  -o-transform: scale(0.5) translate(-50%, -50%);
+  -webkit-transform: scale(0.5) translate(-50%, -50%);
+  transform: scale(0.5) translate(-50%, -50%);
+}
+
+.scanner {
+  height: 300px;
+  object-fit: cover;
   width: 300px;
 }
 
+/*
+.success {
+  min-height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+*/
+
 footer {
-  padding: 20px 0;
-  color: #777;
+  background: #fff;
   border-top: 1px solid #e5e5e5;
+  bottom: 0;
+  color: #777;
+  padding: 20px 0;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
 }
 
 
-/*~~ Modal ~~*/
+/*~~ Material Design Components ~~*/
 
-.cdk-overlay-pane {
-  max-width: 768px;
-  width: 90%;
+.mat-spinner circle {
+  stroke: var(--client-color);
+}
+
+.btn .mat-spinner circle {
+  stroke: #000;
+}
+
+mat-list.mat-list {
+  background: #ccc;
+  border-radius: 5px;
+  height: 200px;
+  margin: 0 0 15px;
+  overflow: auto;
+  padding: 3px;
+}
+
+mat-list.mat-list .mat-list-item {
+  background: #fff;
+  border-radius: 3px;
+  height: 40px;
+  margin: 3px;
+}
+
+mat-list.mat-list div.mat-list-item-content {
+  justify-content: space-between;
 }
 
 mat-dialog-container.mat-dialog-container {
@@ -548,8 +625,6 @@ mat-dialog-actions.mat-dialog-actions:last-child {
 
 /*~~ Media Queries ~~*/
 
-@media all and (min-width:768px) {
-}
+@media all and (min-width:768px) {}
 
-@media all and (min-width:992px) {
-}
+@media all and (min-width:992px) {}

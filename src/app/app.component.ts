@@ -113,6 +113,12 @@ export class AppComponent implements OnInit {
     this.subState = 'inactive';
   }
 
+  refresh() {
+    if (this.router.url === '/') {
+      window.location.reload();
+    }
+  }
+
   logoutAdmin() {
     this.cookieService.removeAll();
     this.adminService.logout();

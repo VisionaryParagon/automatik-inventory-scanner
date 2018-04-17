@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
   name: String,
-  checked: String,
   items: Array,
   date: {
     type: Date,
@@ -10,4 +9,4 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('users', UserSchema);
+module.exports = mongoose.model('inventory-users', UserSchema);

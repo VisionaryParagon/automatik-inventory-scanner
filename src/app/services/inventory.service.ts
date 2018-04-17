@@ -2,79 +2,70 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { User } from './classes';
+import { Item } from './classes';
 
 @Injectable()
-export class UserService {
-  private userUrl = '/usr/users';
-  currentUser: User = new User();
+export class InventoryService {
+  private inventoryUrl = '/inv/items';
+  currentItem: Item = new Item();
 
   constructor(
     private http: Http
   ) { }
 
-  // get all users
-  getUsers() {
-    return this.http.get(this.userUrl)
+  // get all items
+  getItems() {
+    return this.http.get(this.inventoryUrl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
-  // get one user by name
-  getUserName(user) {
-    const nameUrl = this.userUrl + '/name';
-    return this.http.post(nameUrl, user)
-      .toPromise()
-      .then(this.extractData)
-      .catch(this.handleError);
-  }
-
-  // get one user by id
-  getUser(user) {
-    const idUrl = this.userUrl + '/' + user;
+  // get one item by id
+  getItem(item) {
+    const idUrl = this.inventoryUrl + '/' + item;
     return this.http.get(idUrl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
-  // set current user
-  setCurrentUser(user) {
-    this.currentUser = user;
+  // set current item
+  setCurrentItem(item) {
+    this.currentItem = item;
   }
 
-  // get current user
-  getCurrentUser() {
-    return this.currentUser;
+  // get current item
+  getCurrentItem() {
+    return this.currentItem;
   }
 
-  // clear current user
-  clearCurrentUser() {
-    this.currentUser = new User();
+  // clear current item
+  clearCurrentItem() {
+    this.currentItem = new Item();
   }
 
-  // create new user
-  createUser(user) {
-    return this.http.post(this.userUrl, user)
+  // create new item
+  createItem(item) {
+    return this.http.post(this.inventoryUrl, item)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
-  // delete user
-  deleteUser(user) {
-    const idUrl = this.userUrl + '/' + user._id;
+  // delete item
+  deleteItem(item) {
+    const idUrl = this.inventoryUrl + '/' + item._id;
     return this.http.delete(idUrl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
-  // update user
-  updateUser(user) {
-    const idUrl = this.userUrl + '/' + user._id;
-    return this.http.put(idUrl, user)
+  // update item
+  updateItem(item) {
+    const idUrl = this.inventoryUrl + '/' + item._id;
+    return this.http.put(idUrl, item)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

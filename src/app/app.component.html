@@ -1,6 +1,6 @@
 <header>
   <nav>
-    <button id="logoBtn" routerLink="/" (touchstart)="outsideNav(); closeSubNav()"><img src="./assets/images/automatik-horiz-logo.png" height="100%" alt="automätik Logo"></button>
+    <button id="logoBtn" routerLink="/" (touchstart)="outsideNav(); closeSubNav(); refresh()"><img src="./assets/images/automatik-horiz-logo.png" height="100%" alt="automätik Logo"></button>
 
     <button id="navBtn" [class.open]="state === 'active'" (click)="toggleNav()">
       <span></span>
@@ -11,7 +11,7 @@
 
   <div id="navMenu" [@navMenu]="state">
     <div *ngIf="!isAdmin">
-      <a routerLink="/" (click)="closeNav(); closeSubNav()">Start Over</a>
+      <a routerLink="/" (click)="closeNav(); closeSubNav(); refresh()">Start Over</a>
       <a routerLink="/admin" (click)="closeNav(); closeSubNav()">Admin</a>
     </div>
     <div *ngIf="isAdmin">

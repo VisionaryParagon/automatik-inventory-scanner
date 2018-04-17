@@ -5,10 +5,18 @@ export class Contact {
   image: string;
 }
 
+export class Item {
+  _id?: string;
+  item: string;
+  checked: number;
+  name: string;
+  reason: string;
+  date: Date;
+}
+
 export class User {
   _id?: string;
   name: string;
-  checked: string;
   items: Array<any>;
   date: Date;
 }

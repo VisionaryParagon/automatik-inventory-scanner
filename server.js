@@ -19,8 +19,9 @@ mongoose.connect('mongodb://admin:Automatik@ds237379.mlab.com:37379/automatik-ap
 const admin = require('./server/models/admin');
 
 // get routes
-const userRoute = require('./server/routes/user');
 const contactRoute = require('./server/routes/contact');
+const inventoryRoute = require('./server/routes/inventory');
+const userRoute = require('./server/routes/user');
 const adminRoute = require('./server/routes/admin');
 
 const app = express();
@@ -59,8 +60,9 @@ function ensureSecure(req, res, next) {
 // set routes
 app.all('*', ensureSecure);
 app.use(express.static(path.join(__dirname, 'dist')));
-app.use('/usr', userRoute);
 app.use('/dir', contactRoute);
+app.use('/inv', inventoryRoute);
+app.use('/usr', userRoute);
 app.use('/admn', adminRoute);
 app.all('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));

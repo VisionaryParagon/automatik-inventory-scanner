@@ -1,8 +1,7 @@
-import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-import { AnimationEntryMetadata } from '@angular/core';
+import { AnimationTriggerMetadata, animate, state, style, transition, trigger } from '@angular/animations';
 
 // navbar animations
-export const NavAnimation: AnimationEntryMetadata =
+export const NavAnimation: AnimationTriggerMetadata =
   trigger('navMenu', [
     state('active', style({height: '*', opacity: 1})),
     state('inactive', style({height: 0, opacity: 0})),
@@ -11,7 +10,7 @@ export const NavAnimation: AnimationEntryMetadata =
   ]);
 
 // component transition animations
-export const FadeAnimation: AnimationEntryMetadata =
+export const FadeAnimation: AnimationTriggerMetadata =
   trigger('fade', [
     state('*', style({opacity: 1})),
     transition(':enter', [
@@ -25,7 +24,7 @@ export const FadeAnimation: AnimationEntryMetadata =
   ]);
 
 // quick fade animations
-export const QuickFade: AnimationEntryMetadata =
+export const QuickFade: AnimationTriggerMetadata =
   trigger('quickFade', [
     state('*', style({opacity: 1})),
     transition(':enter', [
@@ -39,12 +38,12 @@ export const QuickFade: AnimationEntryMetadata =
   ]);
 
 // top down animations
-export const TopDownAnimation: AnimationEntryMetadata =
+export const TopDownAnimation: AnimationTriggerMetadata =
   trigger('topDown', [
     state('*', style({height: '*', opacity: 1})),
     transition(':enter', [
       style({height: 0, opacity: 0}),
-      animate(100, style({height: '*', opacity: 1}))
+      animate('100ms 250ms', style({height: '*', opacity: 1}))
     ]),
     transition(':leave', [
       style({height: '*', opacity: 1}),

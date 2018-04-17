@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatDialogModule,
   MatInputModule,
-  MatSelectModule,
-  MatProgressSpinnerModule
+  MatListModule,
+  MatProgressSpinnerModule,
+  MatSelectModule
 } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
@@ -16,10 +17,12 @@ import { CookieModule } from 'ngx-cookie';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatDialogModule,
     MatInputModule,
-    MatSelectModule,
+    MatListModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     NgxDatatableModule,
     ZXingScannerModule.forRoot(),
     CookieModule.forRoot()
@@ -28,10 +31,12 @@ import { CookieModule } from 'ngx-cookie';
   exports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatDialogModule,
     MatInputModule,
-    MatSelectModule,
+    MatListModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     NgxDatatableModule,
     ZXingScannerModule,
     CookieModule
