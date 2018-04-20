@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
-import { Contact, Item, User } from '../services/classes';
+import { Contact, Item } from '../services/classes';
 import { ContactService } from '../services/contact.service';
 import { InventoryService } from '../services/inventory.service';
-import { UserService } from '../services/user.service';
 import { SortService } from '../services/sort.service';
 
 import { FadeAnimation, TopDownAnimation } from '../animations';
@@ -17,10 +16,10 @@ import { FadeAnimation, TopDownAnimation } from '../animations';
 })
 export class MainComponent implements OnInit {
   contacts: Contact[];
-  inventory: Item[];
-  user: User = new User();
   selectedContact: Contact;
-  userExists = false;
+  inventory: Item[];
+  userName: string;
+  userItems = [];
   selectedUser = false;
   checkOut: boolean;
   sortOptions = [
@@ -39,7 +38,6 @@ export class MainComponent implements OnInit {
   hasPermission: boolean;
   startScanning = false;
   selectedDevice: MediaDeviceInfo;
-  userItems = [];
   scannedItems = [];
 
   reasonFormControl = new FormControl('', [
@@ -49,7 +47,6 @@ export class MainComponent implements OnInit {
   constructor(
     private contactService: ContactService,
     private inventoryService: InventoryService,
-    private userService: UserService,
     private sortService: SortService
   ) { }
 
@@ -68,10 +65,14 @@ export class MainComponent implements OnInit {
       });
   }
 
-  getInventory() {
+  getInventory(user?) {
     this.inventoryService.getItems()
       .then(res => {
         this.inventory = res;
+        if (user) {
+          this.userItems = this.inventory.filter(item => item.name === user);
+        }
+        this.loading = false;
       })
       .catch(() => {
         this.showError('Could not get inventory');
@@ -105,91 +106,44 @@ export class MainComponent implements OnInit {
 
   checkItems(contact) {
     this.loading = true;
-    this.user.name = contact.first_name + ' ' + contact.last_name;
+    this.userName = contact.first_name + ' ' + contact.last_name;
 
-    this.userService.getUserName(this.user)
-      .then(res => {
-        setTimeout(() => {
-          if (res.valid) {
-            this.userExists = true;
-            this.user = res.data;
-            this.userItems = this.user.items;
-          } else {
-            this.userExists = false;
-            this.userItems = [];
-          }
-
-          this.loading = false;
-        }, 1000);
-      })
-      .catch(() => {
-        this.showError('Could not get user by name');
-      });
-  }
-
-  setUser() {
-    this.getInventory();
-    this.selectedUser = true;
-    this.startScanning = true;
+    this.getInventory(this.userName);
   }
 
   setCheckOut() {
     this.checkOut = true;
-    this.setUser();
+    this.selectedUser = true;
+    this.startScanning = true;
   }
 
   setCheckIn() {
     this.checkOut = false;
-    this.setUser();
+    this.selectedUser = true;
+    this.startScanning = true;
   }
 
   handleQrCodeResult(scan: string) {
     // console.log('Result: ', scan);
     const itemCheck = this.inventory.filter(i => i.item === scan);
     const scanCheck = this.scannedItems.filter(i => i === scan);
-    const userCheck = this.userItems.filter(i => i === scan);
+    const userCheck = this.userItems.filter(i => i.item === scan);
 
     if (this.checkOut) {
       // check-out scans
       if (itemCheck.length) {
-        if (itemCheck[0].checked === 0) {
+        if (itemCheck[0].checked === 'In') {
           if (!scanCheck.length) {
             this.scannedItems.push(scan);
           } else {
             alert('Item already scanned.');
           }
         } else {
-          if (itemCheck[0].name === this.user.name) {
+          if (itemCheck[0].name === this.userName) {
             alert('You have already checked out this item.');
           } else {
             const anyway = confirm('This item is already checked out by ' + itemCheck[0].name + '.\n\nCheck-out anyway?');
             if (anyway) {
-              // Remove item from previous user's item list
-              this.userService.getUserName(itemCheck[0])
-                .then(res => {
-                  if (res.valid) {
-                    const itemHolder = res.data;
-                    const itemIdx = itemHolder.items.indexOf(scan);
-
-                    if (itemIdx > -1) {
-                      itemHolder.items.splice(itemIdx, 1);
-
-                      this.userService.updateUser(itemHolder)
-                        .then(res2 => {
-                          console.log('Item removed from ' + res2.name);
-                        })
-                        .catch(() => {
-                          this.showError('Could not update user');
-                        });
-                    }
-                  } else {
-                    console.log('itemHolder doesn\'t exist');
-                  }
-                })
-                .catch(() => {
-                  this.showError('Could not get user by name');
-                });
-
               // Check item back in
               this.checkItemIn(scan);
 
@@ -204,12 +158,16 @@ export class MainComponent implements OnInit {
     } else {
       // check-in scans
       if (itemCheck.length) {
-        if (itemCheck[0].checked === 1) {
+        if (itemCheck[0].checked === 'Out') {
           if (!scanCheck.length) {
             if (userCheck.length) {
               this.scannedItems.push(scan);
             } else {
-              alert('Item is not checked out by you.');
+              const anyway = confirm('This item is checked out by ' + itemCheck[0].name + '.\n\nCheck-in anyway?');
+              if (anyway) {
+                // Add item to scan list
+                this.scannedItems.push(scan);
+              }
             }
           } else {
             alert('Item already scanned.');
@@ -234,7 +192,7 @@ export class MainComponent implements OnInit {
   updateInventory(item) {
     this.inventoryService.updateItem(item)
       .then(res => {
-        console.log(res.name + ' updated', 'checked: ' + res.checked);
+        console.log(res.item + ' updated', 'checked: ' + res.checked);
       })
       .catch(() => {
         this.showError('Could not update inventory item');
@@ -244,49 +202,25 @@ export class MainComponent implements OnInit {
   checkItemOut(item) {
     const updatedItem = this.inventory.filter(f => f.item === item)[0];
 
-    updatedItem.checked = 1;
-    updatedItem.name = this.user.name;
+    updatedItem.checked = 'Out';
+    updatedItem.name = this.userName;
     updatedItem.reason = this.reasonFormControl.value;
     updatedItem.date = new Date();
 
+    this.userItems.push(updatedItem);
     this.updateInventory(updatedItem);
   }
 
   checkItemIn(item) {
     const updatedItem = this.inventory.filter(f => f.item === item)[0];
 
-    updatedItem.checked = 0;
+    updatedItem.checked = 'In';
     updatedItem.name = '';
     updatedItem.reason = '';
     updatedItem.date = new Date();
 
+    this.userItems = this.userItems.filter(i => i.item !== item);
     this.updateInventory(updatedItem);
-  }
-
-  sendIt(data) {
-    if (this.userExists) {
-      // update existing user
-      this.userService.updateUser(data)
-        .then(res => {
-          this.submitting = false;
-          this.startScanning = false;
-          this.success = true;
-        })
-        .catch(() => {
-          this.showError('Could not update user');
-        });
-    } else {
-      // create new user
-      this.userService.createUser(data)
-        .then(res => {
-          this.submitting = false;
-          this.startScanning = false;
-          this.success = true;
-        })
-        .catch(() => {
-          this.showError('Could not create user');
-        });
-    }
   }
 
   submit() {
@@ -296,30 +230,20 @@ export class MainComponent implements OnInit {
       if (this.checkOut) {
         // check-out submit
         if (this.reasonFormControl.valid) {
-          this.scannedItems.forEach(i => {
-            this.checkItemOut(i);
-          });
-          this.user.items = this.userItems.concat(this.scannedItems);
-
-          this.user.date = new Date();
-
-          // console.log('Submitting: ', this.user);
-          this.sendIt(this.user);
+          this.scannedItems.forEach(i => this.checkItemOut(i));
+          this.submitting = false;
+          this.startScanning = false;
+          this.success = true;
         } else {
           this.submitting = false;
           this.reasonFormControl.markAsTouched();
         }
       } else {
         // check-in submit
-        this.scannedItems.forEach(i => {
-          this.checkItemIn(i);
-        });
-        this.user.items = this.userItems.filter(i => this.scannedItems.indexOf(i) === -1);
-
-        this.user.date = new Date();
-
-        // console.log('Submitting: ', this.user);
-        this.sendIt(this.user);
+        this.scannedItems.forEach(i => this.checkItemIn(i));
+        this.submitting = false;
+        this.startScanning = false;
+        this.success = true;
       }
     } else {
       this.submitting = false;
@@ -337,9 +261,8 @@ export class MainComponent implements OnInit {
     } else {
       this.setCheckIn();
     }
-    this.userItems = this.user.items;
+    this.getInventory(this.userName);
     this.scannedItems = [];
-    this.userExists = true;
     this.success = false;
   }
 

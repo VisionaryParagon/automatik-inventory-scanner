@@ -34,7 +34,7 @@ router.get('/items/:id', function (req, res) {
 
 // delete item
 router.delete('/items/:id', function (req, res) {
-  cont.findByIdAndRemove(req.params.id, function (err, item) {
+  inventory.findByIdAndRemove(req.params.id, function (err, item) {
     const deleted = {
       message: 'Item deleted'
     }

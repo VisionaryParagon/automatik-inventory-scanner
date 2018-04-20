@@ -1,0 +1,185 @@
+.container {
+  max-width: 960px;
+}
+
+.adminBtns {
+  padding: 15px 0;
+  text-align: center;
+}
+
+.ngx-datatable {
+  background: #fff;
+  border: none;
+  border-radius: 5px;
+  clear: both;
+  color: #000;
+  height: 65vh;
+  height: calc(100vh - 300px);
+  width: 100%;
+}
+
+:host /deep/ .ngx-datatable .datatable-header {
+  background: var(--client-color);
+}
+
+:host /deep/ .ngx-datatable .datatable-header .datatable-header-cell {
+  border-right: 1px solid #999;
+  color: #fff;
+  padding: 7px;
+}
+
+:host /deep/ .ngx-datatable .datatable-body .datatable-body-cell {
+  border-right: 1px solid #999;
+  padding: 7px;
+  -moz-transition: width 0.3s ease;
+  -o-transition: width 0.3s ease;
+  -webkit-transition: width 0.3s ease;
+  transition: width 0.3s ease;
+}
+
+:host /deep/ .ngx-datatable .datatable-header .datatable-header-cell:last-of-type,
+:host /deep/ .ngx-datatable .datatable-body .datatable-body-cell:last-of-type {
+  border-right: none;
+}
+
+:host /deep/ .ngx-datatable .datatable-body .datatable-row-odd {
+  background: #efefef;
+}
+
+:host /deep/ .ngx-datatable .datatable-body .datatable-body-row:hover {
+  background: #dedede;
+}
+
+:host /deep/ .ngx-datatable .datatable-body .datatable-body-row.active {
+  background: rgba(255, 186, 0, 0.4);
+}
+
+:host /deep/ .empty-row {
+  padding: 7px;
+}
+
+:host /deep/ .ngx-datatable .datatable-footer {
+  padding: 0 7px;
+}
+
+:host /deep/ .ngx-datatable .datatable-header .datatable-header-cell .sort-btn {
+  float: right;
+  font-family: FontAwesome;
+  line-height: 1.625;
+}
+
+:host /deep/ .ngx-datatable .datatable-header .datatable-header-cell .sort-btn.datatable-icon-down:before {
+  content: "\f106";
+}
+
+:host /deep/ .ngx-datatable .datatable-header .datatable-header-cell .sort-btn.datatable-icon-up:before {
+  content: "\f107";
+}
+
+:host /deep/ .ngx-datatable .datatable-footer li {
+  text-align: center;
+  width: 24px;
+}
+
+:host /deep/ .ngx-datatable .datatable-footer li.pages {
+  width: 24px;
+}
+
+:host /deep/ .ngx-datatable .datatable-footer li.pages.active {
+  background: #ddd;
+}
+
+:host /deep/ .ngx-datatable .datatable-footer i {
+  font-style: normal;
+}
+
+:host /deep/ .ngx-datatable .datatable-footer i.datatable-icon-prev:before {
+  content: "\f100";
+  font-family: FontAwesome;
+}
+
+:host /deep/ .ngx-datatable .datatable-footer i.datatable-icon-left:before {
+  content: "\f104";
+  font-family: FontAwesome;
+}
+
+:host /deep/ .ngx-datatable .datatable-footer i.datatable-icon-right:before {
+  content: "\f105";
+  font-family: FontAwesome;
+}
+
+:host /deep/ .ngx-datatable .datatable-footer i.datatable-icon-skip:before {
+  content: "\f101";
+  font-family: FontAwesome;
+}
+
+:host /deep/ .ngx-datatable .progress-linear {
+  background: rgba(255, 186, 0, 0.4);
+}
+
+:host /deep/ .ngx-datatable .progress-linear .container {
+  padding: 0;
+  max-width: inherit;
+  min-height: inherit;
+  width: 100%;
+}
+
+:host /deep/ .ngx-datatable .progress-linear .bar {
+  -moz-animation: loadBar 1s linear infinite;
+  -o-animation: loadBar 1s linear infinite;
+  -webkit-animation: loadBar 1s linear infinite;
+  animation: loadBar 1s linear infinite;
+  background: var(--client-color);
+  height: 5px;
+  position: relative;
+}
+
+@-moz-keyframes loadBar {
+  from {
+    left: 0;
+    width: 5%;
+  }
+  to {
+    left: 100%;
+    width: 25%;
+  }
+}
+
+@-o-keyframes loadBar {
+  from {
+    left: 0;
+    width: 5%;
+  }
+  to {
+    left: 100%;
+    width: 25%;
+  }
+}
+
+@-webkit-keyframes loadBar {
+  from {
+    left: 0;
+    width: 5%;
+  }
+  to {
+    left: 100%;
+    width: 25%;
+  }
+}
+
+@keyframes loadBar {
+  from {
+    left: 0;
+    width: 5%;
+  }
+  to {
+    left: 100%;
+    width: 25%;
+  }
+}
+
+@media (min-width: 768px) {
+  .adminBtns {
+    text-align: left;
+  }
+}

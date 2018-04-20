@@ -5,7 +5,6 @@ import { Location, PopStateEvent } from '@angular/common';
 import { CookieService } from 'ngx-cookie';
 
 import { AdminService } from './services/admin.service';
-import { UserService } from './services/user.service';
 
 import { NavAnimation } from './animations';
 
@@ -29,8 +28,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private location: Location,
     private cookieService: CookieService,
-    private adminService: AdminService,
-    private userService: UserService
+    private adminService: AdminService
   ) { }
 
   ngOnInit() {
@@ -120,11 +118,20 @@ export class AppComponent implements OnInit {
   }
 
   logoutAdmin() {
-    this.cookieService.removeAll();
-    this.adminService.logout();
-    this.adminService.loggedIn = false;
+    this.adminService.logout()
+      .then((res) => {
+        // Delete cookies
+        this.cookieService.removeAll();
 
-    this.router.navigate(['/admin/login']);
+        // Remove admin login status
+        this.adminService.loggedIn = false;
+
+        // Redirect to login page
+        this.router.navigate(['/admin/login']);
+      })
+      .catch((res) => {
+        console.log(res.message);
+      });
   }
 
 }

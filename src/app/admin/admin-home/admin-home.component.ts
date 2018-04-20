@@ -4,8 +4,8 @@ import { MatDialog } from '@angular/material';
 
 import { CookieService } from 'ngx-cookie';
 
-import { User } from '../../services/classes';
-import { UserService } from '../../services/user.service';
+import { Item } from '../../services/classes';
+import { InventoryService } from '../../services/inventory.service';
 import { AdminService } from '../../services/admin.service';
 
 import { FadeAnimation, TopDownAnimation } from '../../animations';
@@ -20,102 +20,117 @@ import { AdminDeleteComponent } from '../admin-delete/admin-delete.component';
   animations: [ FadeAnimation, TopDownAnimation ]
 })
 export class AdminHomeComponent implements OnInit {
-  users = [];
-  filteredUsers = [];
-  user: User;
+  loading = false;
+  inventory = [];
+  filteredInventory = [];
+  item: Item;
   filter = '';
+  selected = [];
+  columns: any[] = [
+    { prop: 'item', name: 'Item', width: 300 },
+    { prop: 'checked', name: 'Status', width: 100 },
+    { prop: 'name', name: 'Checked Out By', width: 250 },
+    { prop: 'reason', name: 'Reason for Check-Out', width: 300 },
+    { prop: 'date', name: 'Modified Date', width: 250 }
+  ];
   modalOptions = {
     maxWidth: '768px'
   };
-  loading = true;
   error = false;
 
   constructor(
     private router: Router,
-    private dialog: MatDialog,
+    private modalService: MatDialog,
     private cookieService: CookieService,
-    private userService: UserService,
+    private inventoryService: InventoryService,
     private adminService: AdminService
   ) { }
 
   ngOnInit() {
-    this.getUsers();
+    this.getInventory();
   }
 
-  getUsers() {
-    this.userService.getUsers()
+  getInventory() {
+    this.loading = true;
+    this.inventoryService.getItems()
       .then(res => {
-        this.users = res;
-        this.filteredUsers = [...res];
+        this.inventory = res;
+        this.filteredInventory = [...res];
+        if (this.filter) {
+          this.updateFilter();
+        }
         this.loading = false;
       })
       .catch(() => {
-        this.error = true;
+        this.showError();
       });
   }
 
-  resetUsers() {
+  resetInventory() {
     this.filter = '';
-    this.getUsers();
-    this.userService.clearCurrentUser();
+    this.selected = [];
+    this.getInventory();
   }
 
-  newUser() {
-    this.user = new User();
-    this.userService.setCurrentUser(this.user);
-
-    const dialogRef = this.dialog.open(AdminFormComponent, this.modalOptions);
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.resetUsers();
+  openNew() {
+    const modal = this.modalService.open(AdminFormComponent, {
+      data: new Item(),
+      maxHeight: '90%',
+      maxWidth: '768px',
+      width: '80%'
+    });
+    modal.afterClosed().subscribe(result => {
+      this.resetInventory();
     });
   }
 
-  editUser(id) {
-    this.user = this.users.filter(user => user._id === id)[0];
-    this.userService.setCurrentUser(this.user);
-
-    const dialogRef = this.dialog.open(AdminFormComponent, this.modalOptions);
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.resetUsers();
+  openEdit(info) {
+    const modal = this.modalService.open(AdminFormComponent, {
+      data: info,
+      maxHeight: '90%',
+      maxWidth: '768px',
+      width: '80%'
+    });
+    modal.afterClosed().subscribe(result => {
+      this.resetInventory();
     });
   }
 
-  deleteUser(id) {
-    this.user = this.users.filter(user => user._id === id)[0];
-    this.userService.setCurrentUser(this.user);
-
-    const dialogRef = this.dialog.open(AdminDeleteComponent, this.modalOptions);
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.resetUsers();
+  openDelete(info) {
+    const modal = this.modalService.open(AdminDeleteComponent, {
+      data: info,
+      maxHeight: '90%',
+      maxWidth: '768px',
+      width: '80%'
+    });
+    modal.afterClosed().subscribe(result => {
+      this.resetInventory();
     });
   }
 
   updateFilter() {
     const val = this.filter.toLowerCase();
 
-    const filtered = this.filteredUsers.filter(d => {
-      return  d.first_name.toLowerCase().indexOf(val) !== -1 ||
-              d.last_name.toLowerCase().indexOf(val) !== -1 ||
-              d.phone.toLowerCase().indexOf(val) !== -1 ||
-              d.email.toLowerCase().indexOf(val) !== -1;
+    const filtered = this.filteredInventory.filter(d => {
+      return  d.item.toLowerCase().indexOf(val) !== -1 ||
+              d.checked.toLowerCase().indexOf(val) !== -1 ||
+              d.name.toLowerCase().indexOf(val) !== -1 ||
+              d.reason.toLowerCase().indexOf(val) !== -1;
     });
 
-    this.users = filtered;
+    this.inventory = filtered;
   }
 
   clearFilter() {
     this.filter = '';
-    this.getUsers();
+    this.getInventory();
   }
 
-  logout() {
-    this.adminService.loggedIn = false;
-    this.cookieService.removeAll();
-    this.adminService.logout();
+  showError() {
+    this.error = true;
+  }
 
-    this.router.navigate(['/admin/login']);
+  hideError() {
+    this.error = false;
   }
 }

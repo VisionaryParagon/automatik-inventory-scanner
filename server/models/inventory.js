@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const InventorySchema = new mongoose.Schema({
   item: String,
-  checked: Number,
+  checked: String,
   name: String,
   reason: String,
   date: {

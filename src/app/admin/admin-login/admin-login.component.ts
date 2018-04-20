@@ -18,12 +18,10 @@ export class AdminLoginComponent implements OnInit {
   returnUrl: string;
   admin: Admin = new Admin();
   adminCookie = this.cookieService.get('adminId');
+  loading = false;
   invalid = false;
-  invalidUsername = false;
-  invalidPassword = false;
   error = false;
-  err = {};
-  submitted = false;
+  err: string;
 
   constructor(
     private router: Router,
@@ -40,14 +38,17 @@ export class AdminLoginComponent implements OnInit {
     this.returnUrl = this.adminService.returnUrl || '/admin';
   }
 
-  login(user, isValid) {
-    this.submitted = true;
+  login(user, form) {
+    form.submitted = true;
 
-    if (isValid) {
+    if (form.valid) {
+      this.loading = true;
+
       this.adminService.login(user)
         .then((res) => {
           if (res.message === 'Login successful!') {
-            this.hideError();
+            this.hideError(form);
+            this.loading = false;
 
             // Set cookie
             this.cookieService.put('adminId', 'verified');
@@ -64,16 +65,13 @@ export class AdminLoginComponent implements OnInit {
         })
         .catch((res) => {
           if (res.name === 'IncorrectUsernameError') {
-            this.invalidUsername = true;
-            this.invalid = true;
-            this.err = 'Invalid username';
+            form.controls['username'].setErrors({ invalidUsername: true });
           } else if (res.name === 'IncorrectPasswordError') {
-            this.invalidPassword = true;
-            this.invalid = true;
-            this.err = 'Invalid password';
+            form.controls['password'].setErrors({ invalidPassword: true });
           } else {
             this.showError();
           }
+          this.loading = false;
         });
     }
     return false;
@@ -87,10 +85,9 @@ export class AdminLoginComponent implements OnInit {
     this.error = true;
   }
 
-  hideError() {
+  hideError(form) {
     this.invalid = false;
-    this.invalidUsername = false;
-    this.invalidPassword = false;
     this.error = false;
+    this.err = '';
   }
 }

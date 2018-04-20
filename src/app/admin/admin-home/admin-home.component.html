@@ -1,9 +1,39 @@
 <div class="container" [@fade]="true">
-  <div *ngIf="!error">
-    <p>Admin works!</p>
+  <div class="adminBtns">
+    <div class="d-flex justify-content-between mb-3">
+      <div class="d-flex-inline">
+        <button class="btn btn-success" id="new" (click)="openNew()"><i class="fa fa-plus"></i><span class="d-none d-lg-inline-block">&nbsp;New</span></button>
+
+        <button class="btn btn-warning" id="edit" [disabled]="!selected.length" (click)="openEdit(selected[0])"><i class="fa fa-edit"></i><span class="d-none d-lg-inline-block">&nbsp;Edit</span></button>
+
+        <button class="btn btn-danger" id="delete" [disabled]="!selected.length" (click)="openDelete(selected[0])"><i class="fa fa-close"></i><span class="d-none d-lg-inline-block">&nbsp;Delete</span></button>
+      </div>
+
+      <div class="d-flex-inline">
+        <csv-downloader class="d-none d-md-inline-block" id="export" [data]="inventory"></csv-downloader>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <h5 *ngIf="selected.length">Selected Item: {{ selected[0].item }}</h5>
+        <h5 *ngIf="!selected.length">Select an Item Below to make changes</h5>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <mat-form-field class="w-100" id="filter">
+          <span matPrefix>&nbsp; <i class="fa fa-search"></i> &nbsp;</span>
+          <input matInput type="text" placeholder="Search" [(ngModel)]="filter" (keyup)="updateFilter()">
+          <span matSuffix *ngIf="filter" (click)="clearFilter()">&nbsp; <i class="fa fa-close"></i> &nbsp;</span>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
 
   <div [@topDown]="true" *ngIf="error">
     <p class="text-danger">Something went wrong... Please make sure you have a WiFi or mobile data connection and try refreshing your&nbsp;browser.</p>
   </div>
+
+  <ngx-datatable #table [rows]="inventory" [columns]="columns" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40" [rowHeight]="40" [scrollbarV]="true" [scrollbarH]="true" [selected]="selected" [selectionType]="'single'" [loadingIndicator]="loading" [sorts]="[{prop: 'date', dir: 'desc'}]">
+  </ngx-datatable>
 </div>

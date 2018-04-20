@@ -1,0 +1,4 @@
+<button class="btn btn-success" [disabled]="csvLoading" (click)="build()">
+  <span *ngIf="!csvLoading"><i class="fa fa-table"></i><span class="d-none d-lg-inline-block">&nbsp;Export</span></span>
+  <span *ngIf="csvLoading"><mat-spinner class="mx-auto" [diameter]="20" [strokeWidth]="3"></mat-spinner></span>
+</button>

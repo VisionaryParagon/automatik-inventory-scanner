@@ -1,135 +1,80 @@
-<div mat-dialog-title>
-  <h3 *ngIf="!edit">New User</h3>
-  <h3 *ngIf="edit">Editing {{ user.first_name }} {{ user.last_name }}</h3>
+<div class="d-flex justify-content-between">
+  <h2 mat-dialog-title *ngIf="!success && !edit">Add New Item</h2>
+  <h2 mat-dialog-title *ngIf="!success && edit">Editing {{ item.item }}</h2>
+  <h2 mat-dialog-title *ngIf="success">Success!</h2>
+  <button class="dialog-close" (click)="close()"><i class="fa fa-close"></i></button>
 </div>
 
-<form #userForm="ngForm" novalidate>
+<form #itemForm="ngForm" novalidate>
   <mat-dialog-content>
-    <div *ngIf="!error && !success">
-      <div class="form-group">
-        <label for="firstName">First Name*</label>
-        <input type="text" class="form-control" [class.nope]="firstName.invalid && (firstName.touched || submitted)" autocomplete="off" required [(ngModel)]="user.first_name" name="firstName" #firstName="ngModel" (ngModelChange)="hideError()">
-        <div class="errorMsg" [@topDown]="true" *ngIf="firstName.invalid && (firstName.touched || submitted)">
-          <p *ngIf="firstName.errors.required">First Name is required</p>
+    <div *ngIf="!success">
+      <mat-form-field class="mb-3 w-100">
+        <input matInput type="text" placeholder="Item Name" required [(ngModel)]="item.item" name="itemName" #itemName="ngModel" (ngModelChange)="hideError()">
+        <mat-error *ngIf="itemName.invalid && (itemName.touched || itemForm.submitted)">
+          <p *ngIf="itemName.errors.required">Item Name is required</p>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-radio-group class="w-100" required [(ngModel)]="item.checked" name="checked" #checked="ngModel" (ngModelChange)="setUser(item.checked); hideError()">
+        <mat-radio-button class="mr-3" value="In">Checked In</mat-radio-button>
+        <mat-radio-button class="mr-3" value="Out">Checked Out</mat-radio-button>
+      </mat-radio-group>
+      <div class="errorMsg mat-form-field-wrapper" [@topDown]="true" *ngIf="checked.invalid && (checked.touched || itemForm.submitted)">
+        <div class="mat-form-field-subscript-wrapper">
+          <p *ngIf="checked.errors.required">You must make a selection</p>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="lastName">Last Name*</label>
-        <input type="text" class="form-control" [class.nope]="lastName.invalid && (lastName.touched || submitted)" autocomplete="off" required [(ngModel)]="user.last_name" name="lastName" #lastName="ngModel" (ngModelChange)="hideError()">
-        <div class="errorMsg" [@topDown]="true" *ngIf="lastName.invalid && (lastName.touched || submitted)">
-          <p *ngIf="lastName.errors.required">Last Name is required</p>
-        </div>
+      <div class="mt-3" *ngIf="item.checked === 'Out'">
+        <mat-form-field class="mb-3 w-100">
+          <mat-select placeholder="Checked out by:" required [(ngModel)]="item.name" name="userName" #userName="ngModel" (ngModelChange)="hideError()">
+            <mat-option [value]="anyVal" disabled>Checked out by:</mat-option>
+            <mat-option *ngFor="let contact of contacts" [value]="contact.first_name + ' ' + contact.last_name">{{ contact.first_name }} {{ contact.last_name }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="userName.invalid && (userName.touched || itemForm.submitted)">
+            <p *ngIf="userName.errors.required">You must make a selection</p>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="mb-3 w-100">
+          <input matInput type="text" placeholder="Reason for check-out" required [(ngModel)]="item.reason" name="reason" #reason="ngModel" (ngModelChange)="hideError()">
+          <mat-error *ngIf="reason.invalid && (reason.touched || itemForm.submitted)">
+            <p *ngIf="reason.errors.required">Reason is required</p>
+          </mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="form-group">
-        <label for="pseudonym">Pseudonym</label>
-        <input type="text" class="form-control" [class.nope]="pseudonym.invalid && (pseudonym.touched || submitted)" autocomplete="off" [(ngModel)]="user.pseudonym" name="pseudonym" #pseudonym="ngModel" (ngModelChange)="hideError()">
+      <div class="errorMsg" [@topDown]="true" *ngIf="error">
+        <p class="text-center">Something went wrong... Please make sure you have a WiFi or mobile data connection and try refreshing your&nbsp;browser.</p>
       </div>
 
-      <div class="form-group">
-        <label for="email">Email Address*</label>
-        <input type="text" class="form-control" [class.nope]="email.invalid && (email.touched || submitted)" autocomplete="off" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$" [(ngModel)]="user.email" name="email" #email="ngModel" (ngModelChange)="hideError()">
-        <div class="errorMsg" [@topDown]="true" *ngIf="email.invalid && (email.touched || submitted)">
-          <p *ngIf="email.errors.required">Email Address is required</p>
-          <p *ngIf="email.errors.pattern">Invalid Email Address</p>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="phone">Cell Phone Number*</label>
-        <input type="text" class="form-control" [class.nope]="phone.invalid && (phone.touched || submitted)" autocomplete="off" required minlength="10" maxlength="12" pattern="^(\d)+$" [(ngModel)]="user.phone" name="phone" #phone="ngModel" (ngModelChange)="hideError()">
-        <div class="errorMsg" [@topDown]="true" *ngIf="phone.invalid && (phone.touched || submitted)">
-          <p *ngIf="phone.errors.required">Cell Phone Number is required</p>
-          <p *ngIf="phone.errors.minlength">Must be at least 10 digits</p>
-          <p *ngIf="phone.errors.maxlength">Must not be more than 12 digits</p>
-          <p *ngIf="phone.errors.pattern">Numbers only</p>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="phone2">Home Phone Number</label>
-        <input type="text" class="form-control" [class.nope]="phone2.invalid && (phone2.touched || submitted)" autocomplete="off" minlength="10" maxlength="12" pattern="^(\d)+$" [(ngModel)]="user.phone2" name="phone2" #phone2="ngModel" (ngModelChange)="hideError()">
-        <div class="errorMsg" [@topDown]="true" *ngIf="phone2.invalid && (phone2.touched || submitted)">
-          <p *ngIf="phone2.errors.minlength">Must be at least 10 digits</p>
-          <p *ngIf="phone2.errors.maxlength">Must not be more than 12 digits</p>
-          <p *ngIf="phone2.errors.pattern">Numbers only</p>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="phone3">Office Phone Number</label>
-        <input type="text" class="form-control" [class.nope]="phone3.invalid && (phone3.touched || submitted)" autocomplete="off" minlength="10" maxlength="12" pattern="^(\d)+$" [(ngModel)]="user.phone3" name="phone3" #phone3="ngModel" (ngModelChange)="hideError()">
-        <div class="errorMsg" [@topDown]="true" *ngIf="phone3.invalid && (phone3.touched || submitted)">
-          <p *ngIf="phone3.errors.minlength">Must be at least 10 digits</p>
-          <p *ngIf="phone3.errors.maxlength">Must not be more than 12 digits</p>
-          <p *ngIf="phone3.errors.pattern">Numbers only</p>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="fax">Fax Number</label>
-        <input type="text" class="form-control" [class.nope]="fax.invalid && (fax.touched || submitted)" autocomplete="off" minlength="10" maxlength="12" pattern="^(\d)+$" [(ngModel)]="user.fax" name="fax" #fax="ngModel" (ngModelChange)="hideError()">
-        <div class="errorMsg" [@topDown]="true" *ngIf="fax.invalid && (fax.touched || submitted)">
-          <p *ngIf="fax.errors.minlength">Must be at least 10 digits</p>
-          <p *ngIf="fax.errors.maxlength">Must not be more than 12 digits</p>
-          <p *ngIf="fax.errors.pattern">Numbers only</p>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="fax2">Alt. Fax Number</label>
-        <input type="text" class="form-control" [class.nope]="fax2.invalid && (fax2.touched || submitted)" autocomplete="off" minlength="10" maxlength="12" pattern="^(\d)+$" [(ngModel)]="user.fax2" name="fax2" #fax2="ngModel" (ngModelChange)="hideError()">
-        <div class="errorMsg" [@topDown]="true" *ngIf="fax2.invalid && (fax2.touched || submitted)">
-          <p *ngIf="fax2.errors.minlength">Must be at least 10 digits</p>
-          <p *ngIf="fax2.errors.maxlength">Must not be more than 12 digits</p>
-          <p *ngIf="fax2.errors.pattern">Numbers only</p>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="birthday">Birthday</label>
-        <input type="text" class="form-control" autocomplete="off" [(ngModel)]="user.birthday" name="birthday" #birthday="ngModel" (ngModelChange)="hideError()">
-      </div>
-
-      <div class="form-group">
-        <label for="disc">DiSC</label>
-        <input type="text" class="form-control" autocomplete="off" [(ngModel)]="user.disc" name="disc" #disc="ngModel" (ngModelChange)="hideError()">
-      </div>
-
-      <div class="form-group">
-        <label for="image">Image URL</label>
-        <input type="text" class="form-control" autocomplete="off" [(ngModel)]="user.image" name="image" #image="ngModel" (ngModelChange)="hideError()">
-      </div>
-
-      <div class="errorMsg" [@topDown]="true" *ngIf="!userForm.valid && submitted">
-        <p>Please fix the errors above</p>
-      </div>
-
-      <p class="disclaimer text-center">* Required field</p>
+      <p class="disclaimer">* Required field</p>
     </div>
 
-    <div [@fade]="true" *ngIf="!error && success">
-      <h3 class="text-success">Success!</h3>
+    <div [@fade]="true" *ngIf="success">
+      <p *ngIf="!edit">{{ item.item }} has successfully been added.</p>
 
-      <p>{{ user.first_name }} {{ user.last_name }} has been <span *ngIf="!edit">added</span><span *ngIf="edit">edited</span>.</p>
-    </div>
-
-    <div [@topDown]="true" *ngIf="error">
-      <p class="text-danger">Something went wrong... Please make sure you have a WiFi or mobile data connection and try refreshing your&nbsp;browser.</p>
+      <p *ngIf="edit">{{ item.item }} has successfully been updated.</p>
     </div>
   </mat-dialog-content>
+
   <mat-dialog-actions class="justify-content-end">
-    <div *ngIf="!error && !success">
-      <button type="button" class="btn btn-secondary" mat-dialog-close>Cancel</button>
-      <button type="button" class="btn btn-success" (click)="saveUser(userForm.valid)"><i class="fa fa-check"></i> Submit</button>
+    <div *ngIf="!success">
+      <button class="btn btn-secondary" (click)="close()">Cancel</button>
+
+      <button class="btn btn-success" [disabled]="loading" (click)="submit(item, itemForm)">
+        <span *ngIf="!loading">Submit</span>
+        <span *ngIf="loading"><mat-spinner class="mx-auto" [diameter]="24" [strokeWidth]="3"></mat-spinner></span>
+      </button>
     </div>
-    <div [@fade]="true" *ngIf="!error && success">
-      <button type="button" class="btn btn-success" *ngIf="!error && !edit" (click)="addAnother()"><i class="fa fa-plus"></i> Add Another</button>
-      <button type="button" class="btn btn-danger" mat-dialog-close>Close</button>
-    </div>
-    <div *ngIf="error">
-      <button type="button" class="btn btn-danger" mat-dialog-close>Close</button>
+
+    <div [@fade]="true" *ngIf="success">
+      <button class="btn btn-secondary" (click)="close()">Close</button>
+
+      <button class="btn btn-secondary" (click)="goAgain(itemForm)">
+        <span *ngIf="!edit">Create Another</span>
+        <span *ngIf="edit">Edit Again</span>
+      </button>
     </div>
   </mat-dialog-actions>
 </form>

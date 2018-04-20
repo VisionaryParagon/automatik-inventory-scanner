@@ -18,32 +18,34 @@
         <mat-spinner class="mx-auto" [diameter]="50" [strokeWidth]="5"></mat-spinner>
       </div>
 
-      <div class="info" [@fade]="true" *ngIf="!loading && selectedContact">
-        <h2>Hello, {{ selectedContact.first_name }} {{ selectedContact.last_name }}!</h2>
+      <div class="info" [@fade]="true" *ngIf="!loading && userName">
+        <h2>Hello, {{ userName }}!</h2>
 
-        <p [@fade]="true" *ngIf="selectedUser"><a (click)="startOver()">Not {{ selectedContact.first_name }} {{ selectedContact.last_name }}?</a></p>
+        <p [@fade]="true" *ngIf="selectedUser"><a (click)="startOver()">Not {{ userName }}?</a></p>
 
-        <img [src]="selectedContact.image" [class.active]="selectedUser" alt="{{ selectedContact.first_name }} {{ selectedContact.last_name }}">
+        <img [src]="selectedContact.image" [class.active]="selectedUser" alt="{{ userName }}">
 
-        <div *ngIf="!selectedUser">
-          <div *ngIf="userItems.length">
-            <p>You currently have the following items checked&nbsp;out:</p>
+        <div class="row" *ngIf="!selectedUser">
+          <div class="col-10 offset-1 col-md-8 offset-md-2">
+            <div *ngIf="userItems.length">
+              <p>You currently have the following items checked&nbsp;out:</p>
 
-            <mat-list>
-              <mat-list-item *ngFor="let item of userItems">{{ item }}</mat-list-item>
-            </mat-list>
-          </div>
-
-          <div *ngIf="!userItems.length">
-            <p>You do not currently have any items checked&nbsp;out.</p>
-          </div>
-
-          <div class="row">
-            <div class="col-4 offset-2">
-              <button class="btn btn-warning btn-lg btn-block" (click)="setCheckOut()">Check-Out</button>
+              <mat-list>
+                <mat-list-item *ngFor="let item of userItems">{{ item.item }}</mat-list-item>
+              </mat-list>
             </div>
-            <div class="col-4">
-              <button class="btn btn-warning btn-lg btn-block" [disabled]="!userItems.length" (click)="setCheckIn()">Check-In</button>
+
+            <div *ngIf="!userItems.length">
+              <p>You do not currently have any items checked&nbsp;out.</p>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <button class="btn btn-warning btn-lg btn-block" (click)="setCheckOut()">Check-Out</button>
+              </div>
+              <div class="col">
+                <button class="btn btn-warning btn-lg btn-block" [disabled]="!userItems.length" (click)="setCheckIn()">Check-In</button>
+              </div>
             </div>
           </div>
         </div>
@@ -57,7 +59,7 @@
             <mat-list>
               <mat-list-item *ngFor="let item of scannedItems">
                 <span>{{ item }}</span>
-                <button class="btn" (click)="removeItem(item)"><i class="fa fa-minus text-danger"></i></button>
+                <button (click)="removeItem(item)"><i class="fa fa-minus text-danger"></i></button>
               </mat-list-item>
             </mat-list>
           </div>
@@ -66,7 +68,7 @@
             <h4>Your checked-out items:</h4>
 
             <mat-list>
-              <mat-list-item *ngFor="let item of userItems">{{ item }}</mat-list-item>
+              <mat-list-item *ngFor="let item of userItems">{{ item.item }}</mat-list-item>
             </mat-list>
           </div>
         </div>
@@ -94,20 +96,20 @@
 
       <div class="success" [@fade]="true" *ngIf="!error && success">
         <div class="row">
-          <div class="col-8 offset-2">
+          <div class="col-10 offset-1 col-md-8 offset-md-2">
             <h2 class="text-success">Success!</h2>
 
-            <p>Thanks for checking items <span *ngIf="checkOut">out</span><span *ngIf="!checkOut">in</span>, {{ user.name }}!</p>
+            <p>Thanks for checking items <span *ngIf="checkOut">out</span><span *ngIf="!checkOut">in</span>, {{ userName }}!</p>
 
-            <div *ngIf="user.items.length">
+            <div *ngIf="userItems.length">
               <p>You currently have the following items checked&nbsp;out:</p>
 
               <mat-list>
-                <mat-list-item *ngFor="let item of user.items">{{ item }}</mat-list-item>
+                <mat-list-item *ngFor="let item of userItems">{{ item.item }}</mat-list-item>
               </mat-list>
             </div>
 
-            <div *ngIf="!user.items.length">
+            <div *ngIf="!userItems.length">
               <p>You do not currently have any items checked&nbsp;out.</p>
             </div>
 
@@ -116,7 +118,7 @@
                 <button class="btn btn-warning btn-lg btn-block mb-3" (click)="goAgain('out')">Check-Out <span *ngIf="checkOut">More </span>Items</button>
               </div>
               <div class="col">
-                <button class="btn btn-warning btn-lg btn-block mb-3" [disabled]="!user.items.length" (click)="goAgain('in')">Check-In <span *ngIf="!checkOut">More </span>Items</button>
+                <button class="btn btn-warning btn-lg btn-block mb-3" [disabled]="!userItems.length" (click)="goAgain('in')">Check-In <span *ngIf="!checkOut">More </span>Items</button>
               </div>
             </div>
 

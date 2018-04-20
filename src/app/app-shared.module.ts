@@ -6,12 +6,15 @@ import {
   MatInputModule,
   MatListModule,
   MatProgressSpinnerModule,
+  MatRadioModule,
   MatSelectModule
 } from '@angular/material';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 import { CookieModule } from 'ngx-cookie';
+
+import { CsvDownloaderComponent } from './directives/csv-downloader/csv-downloader.component';
 
 @NgModule({
   imports: [
@@ -22,12 +25,15 @@ import { CookieModule } from 'ngx-cookie';
     MatInputModule,
     MatListModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
     MatSelectModule,
     NgxDatatableModule,
     ZXingScannerModule.forRoot(),
     CookieModule.forRoot()
   ],
-  declarations: [],
+  declarations: [
+    CsvDownloaderComponent
+  ],
   exports: [
     CommonModule,
     FormsModule,
@@ -36,10 +42,12 @@ import { CookieModule } from 'ngx-cookie';
     MatInputModule,
     MatListModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
     MatSelectModule,
     NgxDatatableModule,
     ZXingScannerModule,
-    CookieModule
+    CookieModule,
+    CsvDownloaderComponent
   ]
 })
 export class AppSharedModule { }

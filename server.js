@@ -21,7 +21,6 @@ const admin = require('./server/models/admin');
 // get routes
 const contactRoute = require('./server/routes/contact');
 const inventoryRoute = require('./server/routes/inventory');
-const userRoute = require('./server/routes/user');
 const adminRoute = require('./server/routes/admin');
 
 const app = express();
@@ -62,7 +61,6 @@ app.all('*', ensureSecure);
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/dir', contactRoute);
 app.use('/inv', inventoryRoute);
-app.use('/usr', userRoute);
 app.use('/admn', adminRoute);
 app.all('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));

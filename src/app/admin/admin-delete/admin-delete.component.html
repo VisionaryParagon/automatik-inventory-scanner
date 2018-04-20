@@ -1,23 +1,25 @@
-<div mat-dialog-title>
-  <h3>Delete {{ user.first_name }} {{ user.last_name }}?</h3>
+<div class="d-flex justify-content-between">
+  <h2 mat-dialog-title *ngIf="!success">Delete {{ item.item }}?</h2>
+  <h2 mat-dialog-title *ngIf="success">Success!</h2>
+  <button class="dialog-close" (click)="close()"><i class="fa fa-close"></i></button>
 </div>
+
 <mat-dialog-content>
   <div *ngIf="!error && !success">
-    <p>Are you sure you wish to delete {{ user.first_name }} {{ user.last_name }} from the directory?</p>
+    <p>Are you sure you wish to delete {{ item.item }} from inventory?</p>
 
     <p>This cannot be undone.</p>
   </div>
 
   <div *ngIf="!error && success">
-    <h3 class="text-success">Success!</h3>
-
-    <p>{{ user.first_name }} {{ user.last_name }} has been deleted.</p>
+    <p>{{ item.item }} has been deleted.</p>
   </div>
 
   <div *ngIf="error">
     <p class="text-danger">Something went wrong... Please make sure you have a WiFi or mobile data connection and try refreshing your&nbsp;browser.</p>
   </div>
 </mat-dialog-content>
+
 <mat-dialog-actions class="justify-content-end">
   <div *ngIf="!error && !success">
   <button type="button" class="btn btn-secondary" mat-dialog-close>No</button>

@@ -10,7 +10,6 @@ import { AppSharedModule } from './app-shared.module';
 // Services
 import { ContactService } from './services/contact.service';
 import { InventoryService } from './services/inventory.service';
-import { UserService } from './services/user.service';
 import { AdminService } from './services/admin.service';
 import { SortService } from './services/sort.service';
 
@@ -36,7 +35,6 @@ import { MainComponent } from './main/main.component';
   providers: [
     ContactService,
     InventoryService,
-    UserService,
     AdminService,
     SortService
   ],

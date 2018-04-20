@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material';
 
-import { User } from '../../services/classes';
-import { UserService } from '../../services/user.service';
+import { Item } from '../../services/classes';
+import { InventoryService } from '../../services/inventory.service';
 
 @Component({
   selector: 'app-admin-delete',
@@ -10,22 +10,21 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./admin-delete.component.css']
 })
 export class AdminDeleteComponent implements OnInit {
-  user: User;
+  item: Item;
   success = false;
   error = false;
 
   constructor(
-    public dialogRef: MatDialogRef<AdminDeleteComponent>,
-    private userService: UserService
+    private inventoryService: InventoryService,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
-    this.user = this.userService.getCurrentUser();
-    // console.log(this.user);
+    this.item = this.data;
   }
 
   deleteUser() {
-    this.userService.deleteUser(this.user)
+    this.inventoryService.deleteItem(this.item)
       .then(() => {
         this.success = true;
       })
