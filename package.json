@@ -9,8 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "go": "ng build && node server.js",
-    "forever": "ng build --prod && forever start server.js"
+    "go": "ng build && sudo node server.js",
+    "forever": "ng build --prod && sudo forever start server.js"
   },
   "private": true,
   "dependencies": {

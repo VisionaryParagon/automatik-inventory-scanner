@@ -143,7 +143,7 @@
         <p>You denied the camera permissions.</p>
       </div>
 
-      <zxing-scanner #scanner class="test-class" [scannerEnabled]="startScanning" [device]="selectedDevice" [cssClass]="'scanner'" (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
+      <zxing-scanner #scanner class="test-class scanner" [scannerEnabled]="startScanning" [device]="selectedDevice" (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
     </div>
   </div>
 

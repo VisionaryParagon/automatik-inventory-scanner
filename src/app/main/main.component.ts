@@ -31,8 +31,7 @@ export class MainComponent implements OnInit {
   success = false;
   error = false;
 
-  @ViewChild('scanner')
-  scanner;
+  @ViewChild('scanner') scanner;
 
   hasCameras = false;
   hasPermission: boolean;
@@ -85,9 +84,9 @@ export class MainComponent implements OnInit {
 
       // console.log('Devices: ', devices);
 
-      // selects the devices's front camera by default
+      // selects the devices's rear camera by default
       for (const device of devices) {
-        if (/front|facetime/gi.test(device.label)) {
+        if (/back/gi.test(device.label)) {
           this.scanner.changeDevice(device);
           this.selectedDevice = device;
           break;
