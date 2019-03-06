@@ -11,7 +11,7 @@ import { FadeAnimation, TopDownAnimation } from '../animations';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css'],
+  styleUrls: ['./main.component.scss'],
   animations: [ FadeAnimation, TopDownAnimation ]
 })
 export class MainComponent implements OnInit {
@@ -56,26 +56,24 @@ export class MainComponent implements OnInit {
 
   getContacts() {
     this.contactService.getContacts()
-      .then(res => {
-        this.contacts = this.sortService.sort(res.filter(c => c.last_name.length > 1), this.sortOptions);
-      })
-      .catch(() => {
-        this.showError('Could not get contacts');
-      });
+      .subscribe(
+        res => this.contacts = this.sortService.sort(res.filter(c => c.last_name.length > 1), this.sortOptions),
+        err => this.showError('Could not get contacts')
+      );
   }
 
   getInventory(user?) {
     this.inventoryService.getItems()
-      .then(res => {
-        this.inventory = res;
-        if (user) {
-          this.userItems = this.inventory.filter(item => item.name === user);
-        }
-        this.loading = false;
-      })
-      .catch(() => {
-        this.showError('Could not get inventory');
-      });
+      .subscribe(
+        res => {
+          this.inventory = res;
+          if (user) {
+            this.userItems = this.inventory.filter(item => item.name === user);
+          }
+          this.loading = false;
+        },
+        err => this.showError('Could not get inventory')
+      );
   }
 
   initScanner() {
@@ -190,12 +188,10 @@ export class MainComponent implements OnInit {
 
   updateInventory(item) {
     this.inventoryService.updateItem(item)
-      .then(res => {
-        console.log(res.item + ' updated', 'checked: ' + res.checked);
-      })
-      .catch(() => {
-        this.showError('Could not update inventory item');
-      });
+      .subscribe(
+        res => console.log(res.item + ' updated', 'checked: ' + res.checked),
+        err => this.showError('Could not update inventory item')
+      );
   }
 
   checkItemOut(item) {

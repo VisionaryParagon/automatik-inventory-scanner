@@ -7,7 +7,7 @@ import { InventoryService } from '../../services/inventory.service';
 @Component({
   selector: 'app-admin-delete',
   templateUrl: './admin-delete.component.html',
-  styleUrls: ['./admin-delete.component.css']
+  styleUrls: ['./admin-delete.component.scss']
 })
 export class AdminDeleteComponent implements OnInit {
   item: Item;
@@ -25,12 +25,10 @@ export class AdminDeleteComponent implements OnInit {
 
   deleteUser() {
     this.inventoryService.deleteItem(this.item)
-      .then(() => {
-        this.success = true;
-      })
-      .catch(() => {
-        this.showError();
-      });
+      .subscribe(
+        res => this.success = true,
+        err => this.showError()
+      );
   }
 
   showError() {

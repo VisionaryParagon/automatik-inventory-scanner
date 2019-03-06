@@ -5,7 +5,7 @@ import { Item } from '../../services/classes';
 @Component({
   selector: 'csv-downloader',
   templateUrl: './csv-downloader.component.html',
-  styleUrls: ['./csv-downloader.component.css']
+  styleUrls: ['./csv-downloader.component.scss']
 })
 export class CsvDownloaderComponent {
   @Input() data: any[] = [];

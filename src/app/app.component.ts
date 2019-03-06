@@ -11,7 +11,7 @@ import { NavAnimation } from './animations';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
   animations: [ NavAnimation ]
 })
 export class AppComponent implements OnInit {
@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
         }
 
         // check user status
-        this.isLoggedInAdmin = this.adminService.loggedIn;
+        this.isLoggedInAdmin = this.adminService.state.loggedIn;
 
         // route checks for nav
         if (ev.url === ('/' || '/admin')) {
@@ -119,19 +119,19 @@ export class AppComponent implements OnInit {
 
   logoutAdmin() {
     this.adminService.logout()
-      .then((res) => {
-        // Delete cookies
-        this.cookieService.removeAll();
+      .subscribe(
+        res => {
+          // Delete cookies
+          this.cookieService.removeAll();
 
-        // Remove admin login status
-        this.adminService.loggedIn = false;
+          // Remove admin login status
+          this.adminService.state.loggedIn = false;
 
-        // Redirect to login page
-        this.router.navigate(['/admin/login']);
-      })
-      .catch((res) => {
-        console.log(res.message);
-      });
+          // Redirect to login page
+          this.router.navigate(['/admin/login']);
+        },
+        err => console.log(err)
+      );
   }
 
 }

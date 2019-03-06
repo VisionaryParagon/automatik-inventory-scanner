@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+// Admin Guards
 import { AdminGuardService } from '../services/admin-guard.service';
+import { AdminLoginGuardService } from '../services/admin-login-guard.service';
 
+// Main
 import { AdminComponent } from './admin.component';
 import { AdminHomeComponent } from './admin-home/admin-home.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
@@ -14,12 +17,13 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        canActivate: [AdminGuardService],
-        component: AdminHomeComponent
+        component: AdminHomeComponent,
+        canActivate: [AdminGuardService]
       },
       {
         path: 'login',
-        component: AdminLoginComponent
+        component: AdminLoginComponent,
+        canActivate: [AdminLoginGuardService]
       }
     ]
   },
@@ -30,14 +34,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ],
-  providers: [
-    AdminGuardService
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class AdminRoutingModule {}

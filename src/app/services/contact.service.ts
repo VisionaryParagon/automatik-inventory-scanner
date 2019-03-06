@@ -1,40 +1,42 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import 'rxjs/add/operator/toPromise';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry, tap } from 'rxjs/operators';
 
 import { Contact } from './classes';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ContactService {
   private contactUrl = '/dir/contacts';
 
   constructor(
-    private http: Http
+    private http: HttpClient
   ) { }
 
   // get all contacts
   getContacts() {
-    return this.http.get(this.contactUrl)
-      .toPromise()
-      .then(this.extractData)
-      .catch(this.handleError);
+    return this.http.get<Contact[]>(this.contactUrl)
+      .pipe(
+        retry(3),
+        catchError(this.handleError)
+      );
   }
 
-  private extractData(res: Response) {
-    const body = res.json();
-    return body;
-  }
-
-  private handleError (error: any) {
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error.message);
     } else {
-      errMsg = error.message ? error.message : error.toString();
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: ${error.message}`);
     }
-    console.error(errMsg);
-    return Promise.reject('An error occurred');
+    // return an observable with a user-facing error message
+    return throwError(error);
   }
 }

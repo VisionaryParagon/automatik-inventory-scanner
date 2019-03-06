@@ -11,7 +11,7 @@ import { FadeAnimation, TopDownAnimation } from '../../animations';
 @Component({
   selector: 'app-admin-login',
   templateUrl: './admin-login.component.html',
-  styleUrls: ['./admin-login.component.css'],
+  styleUrls: ['./admin-login.component.scss'],
   animations: [ FadeAnimation, TopDownAnimation ]
 })
 export class AdminLoginComponent implements OnInit {
@@ -45,34 +45,36 @@ export class AdminLoginComponent implements OnInit {
       this.loading = true;
 
       this.adminService.login(user)
-        .then((res) => {
-          if (res.message === 'Login successful!') {
-            this.hideError(form);
+        .subscribe(
+          res => {
+            if (res.message === 'Login successful!') {
+              this.hideError(form);
+              this.loading = false;
+
+              // Set cookie
+              this.cookieService.put('adminId', 'verified');
+
+              // Save login status
+              this.adminService.state.loggedIn = true;
+
+              // Redirect to saved URL or home
+              this.router.navigateByUrl(this.returnUrl);
+            } else {
+              this.invalid = true;
+              this.err = res.message;
+            }
+          },
+          err => {
+            if (err.name === 'IncorrectUsernameError') {
+              form.controls['username'].setErrors({ invalidUsername: true });
+            } else if (err.name === 'IncorrectPasswordError') {
+              form.controls['password'].setErrors({ invalidPassword: true });
+            } else {
+              this.showError();
+            }
             this.loading = false;
-
-            // Set cookie
-            this.cookieService.put('adminId', 'verified');
-
-            // Save login status
-            this.adminService.loggedIn = true;
-
-            // Redirect to saved URL or home
-            this.router.navigateByUrl(this.returnUrl);
-          } else {
-            this.invalid = true;
-            this.err = res.message;
           }
-        })
-        .catch((res) => {
-          if (res.name === 'IncorrectUsernameError') {
-            form.controls['username'].setErrors({ invalidUsername: true });
-          } else if (res.name === 'IncorrectPasswordError') {
-            form.controls['password'].setErrors({ invalidPassword: true });
-          } else {
-            this.showError();
-          }
-          this.loading = false;
-        });
+        );
     }
     return false;
   }

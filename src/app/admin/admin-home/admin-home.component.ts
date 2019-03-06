@@ -16,7 +16,7 @@ import { AdminDeleteComponent } from '../admin-delete/admin-delete.component';
 @Component({
   selector: 'app-admin-home',
   templateUrl: './admin-home.component.html',
-  styleUrls: ['./admin-home.component.css'],
+  styleUrls: ['./admin-home.component.scss'],
   animations: [ FadeAnimation, TopDownAnimation ]
 })
 export class AdminHomeComponent implements OnInit {
@@ -53,17 +53,17 @@ export class AdminHomeComponent implements OnInit {
   getInventory() {
     this.loading = true;
     this.inventoryService.getItems()
-      .then(res => {
-        this.inventory = res;
-        this.filteredInventory = [...res];
-        if (this.filter) {
-          this.updateFilter();
-        }
-        this.loading = false;
-      })
-      .catch(() => {
-        this.showError();
-      });
+      .subscribe(
+        res => {
+          this.inventory = res;
+          this.filteredInventory = [...res];
+          if (this.filter) {
+            this.updateFilter();
+          }
+          this.loading = false;
+        },
+        err => this.showError()
+      );
   }
 
   resetInventory() {

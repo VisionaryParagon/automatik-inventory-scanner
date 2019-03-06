@@ -11,7 +11,7 @@ import { FadeAnimation, TopDownAnimation } from '../../animations';
 @Component({
   selector: 'app-admin-form',
   templateUrl: './admin-form.component.html',
-  styleUrls: ['./admin-form.component.css'],
+  styleUrls: ['./admin-form.component.scss'],
   animations: [ FadeAnimation, TopDownAnimation ]
 })
 export class AdminFormComponent implements OnInit {
@@ -49,12 +49,10 @@ export class AdminFormComponent implements OnInit {
 
   getContacts() {
     this.contactService.getContacts()
-      .then(res => {
-        this.contacts = this.sortService.sort(res.filter(c => c.last_name.length > 1), this.sortOptions);
-      })
-      .catch(() => {
-        this.showError('Could not get contacts');
-      });
+      .subscribe(
+        res => this.contacts = this.sortService.sort(res.filter(c => c.last_name.length > 1), this.sortOptions),
+        err => this.showError('Could not get contacts')
+      );
   }
 
   setUser(checked) {
@@ -66,32 +64,36 @@ export class AdminFormComponent implements OnInit {
 
   createItem(data) {
     this.inventoryService.createItem(data)
-      .then((res) => {
-        // console.log('Item creation success');
-        this.item = res;
-        this.itemCache = {...res};
-        this.loading = false;
-        this.success = true;
-      })
-      .catch(() => {
-        this.showError('Item creation fail');
-        this.loading = false;
-      });
+      .subscribe(
+        res => {
+          // console.log('Item creation success');
+          this.item = res;
+          this.itemCache = {...res};
+          this.loading = false;
+          this.success = true;
+        },
+        err => {
+          this.showError('Item creation fail');
+          this.loading = false;
+        }
+      );
   }
 
   updateItem(data) {
     this.inventoryService.updateItem(data)
-      .then((res) => {
-        // console.log('Update item success');
-        this.item = res;
-        this.itemCache = {...res};
-        this.loading = false;
-        this.success = true;
-      })
-      .catch(() => {
-        this.showError('Update item fail');
-        this.loading = false;
-      });
+      .subscribe(
+        res => {
+          // console.log('Update item success');
+          this.item = res;
+          this.itemCache = {...res};
+          this.loading = false;
+          this.success = true;
+        },
+        err => {
+          this.showError('Update item fail');
+          this.loading = false;
+        }
+      );
   }
 
   submit(data, form) {

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpModule } from '@angular/http';
 
 // App Modules
 import { AppRoutingModule } from './app-routing.module';
@@ -17,24 +16,19 @@ import { SortService } from './services/sort.service';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 
-// Services
-
 
 @NgModule({
   imports: [
     AppRoutingModule,
     AppSharedModule,
     BrowserModule,
-    BrowserAnimationsModule,
-    HttpModule
+    BrowserAnimationsModule
   ],
   declarations: [
     AppComponent,
     MainComponent
   ],
   providers: [
-    ContactService,
-    InventoryService,
     AdminService,
     SortService
   ],
